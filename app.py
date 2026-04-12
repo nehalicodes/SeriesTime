@@ -2,11 +2,18 @@ from flask import Flask, render_template, request
 import json
 import http.client
 import urllib.parse
+import os
+from dotenv import load_dotenv
+from matplotlib.pyplot import title
+
 
 app = Flask(__name__)
 
 # Replace these with your TMDb API keys
-API_LIST = ['YOUR_TMDB_KEY']
+
+load_dotenv()  # loads .env file
+
+API_LIST = os.getenv("TMDB_API_KEYS").split(",")
 API_Counter = 0
 
 
@@ -23,7 +30,7 @@ def seriesGraph():
     seriesName, labelsList, valuesList, episodeTitlesList = getTMDBData(seriesKey, seasons)
 
     return render_template(
-        "darkGraph.html",
+        "darkGraphWithCSS.html",
         seriesName=seriesName,
         labelsList=labelsList,
         valuesList=valuesList,
