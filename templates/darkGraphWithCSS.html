@@ -1,37 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dark Themed Stats</title>
-    <link rel="stylesheet" href="/static/css/style.css" />
+    <title>SeriesTime • Activity Overview</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+
+            /* Netflix-style gradient */
+            background: linear-gradient(135deg, #000000 0%, #1a0000 40%, #330000 100%);
+            min-height: 100vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Subtle overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(50, 48, 48, 0.45);
+            z-index: 1;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .navbar .title {
+            font-size: 38px;
+            font-weight: bold;
+            color: #e50914;
+            text-shadow: 0 0 20px rgba(229, 9, 20, 0.6);
+            letter-spacing: 1px;
+        }
+
+        /* PROFILE DROPDOWN */
+        .profile-menu {
+            position: absolute;
+            right: 40px;
+            top: 20px;
+            z-index: 4;
+        }
+
+        .profile-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #e50914;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(229, 9, 20, 0.6);
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            width: 200px;
+            margin-top: 0px;
+            background: rgba(0,0,0,0.9);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0,0,0,0.7);
+        }
+
+        .dropdown a {
+            display: block;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .dropdown a:hover {
+            background: #e50914;
+        }
+
+        .profile-menu:hover .dropdown {
+            display: block;
+        }
+
+        /* MAIN CONTENT */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 30px auto 40px auto;
+            background: rgba(0,0,0,0.78);
+            padding: 40px;
+            border-radius: 10px;
+            color: white;
+            box-shadow: 0 0 25px rgba(0,0,0,0.8);
+            text-align: center;
+        }
+
+        h1 {
+            color: #e50914;
+            font-size: 32px;
+            margin-bottom: 30px;
+        }
+
+        /* CENTERED STATS */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: #111;
+            padding: 20px;
+            width: 160px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.6);
+        }
+
+        .stat span:first-child {
+            display: block;
+            font-size: 14px;
+            color: #bbb;
+            margin-bottom: 8px;
+        }
+
+        .stat span:last-child {
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        /* GRAPH FIX */
+        canvas {
+            width: 100% !important;
+            max-width: 800px;
+            height: 400px !important;
+            margin: 0 auto;
+            display: block;
+        }
+    </style>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
-  </head>
-  <body>
+</head>
+
+<body>
+
+    <div class="overlay"></div>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="title">SeriesTime</div>
+    </div>
+
+    <!-- PROFILE DROPDOWN -->
+    <div class="profile-menu">
+        <div class="profile-icon">S</div>
+        <div class="dropdown">
+            <a href="/my_watchlist">My Watchlist</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
     <div class="container">
-      <h1>Activity Overview</h1>
-      <div class="stats">
-        <div class="stat">
-          <span>views</span>
-          <span>17k</span>
+        <h1>Activity Overview</h1>
+
+        <div class="stats">
+            <div class="stat"><span>views</span><span>17k</span></div>
+            <div class="stat"><span>downloads</span><span>447</span></div>
+            <div class="stat"><span>likes</span><span>1.2k</span></div>
+            <div class="stat"><span>followers</span><span>2.5k</span></div>
         </div>
-        <div class="stat">
-          <span>downloads</span>
-          <span>447</span>
-        </div>
-        <div class="stat">
-          <span>likes</span>
-          <span>1.2k</span>
-        </div>
-        <div class="stat">
-          <span>followers</span>
-          <span>2.5k</span>
-        </div>
-      </div>
-      <canvas class="line-graph"></canvas>
+
+        <!-- GRAPH IS NOW INSIDE THE CONTAINER -->
+        <canvas class="line-graph"></canvas>
     </div>
     <script src="/static/js/app.js"></script>
 
-  </body>
+</body>
 </html>

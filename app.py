@@ -6,8 +6,15 @@ import os
 from dotenv import load_dotenv
 from matplotlib.pyplot import title
 
+#from models
+from models.user import User
+from models.database import get_db
+from models.watchlist import add_to_watchlist, get_watchlist
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from flask import redirect, url_for
 
 app = Flask(__name__)
+app.secret_key = "supersecretkey123"
 
 # Replace these with your TMDb API keys
 
@@ -16,8 +23,12 @@ load_dotenv()  # loads .env file
 API_LIST = os.getenv("TMDB_API_KEYS").split(",")
 API_Counter = 0
 
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"
 
 @app.route('/')
+@login_required
 def home():
     return render_template("home.html")
 
@@ -38,6 +49,34 @@ def seriesGraph():
         seasonCount=len(labelsList)
     )
 
+# ---------------------------------------------------------
+# Login
+# ---------------------------------------------------------
+@login_manager.user_loader
+def load_user(user_id):
+    conn = get_db()
+    user = conn.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
+    conn.close()
+
+    if user:
+        return User(user["id"], user["username"], user["password"])
+    return None
+
+@app.route("/add_to_watchlist/<int:show_id>")
+@login_required
+def add_to_watchlist_route(show_id):
+    show_name = request.args.get("name")
+    poster = request.args.get("poster")
+
+    add_to_watchlist(current_user.id, show_id, show_name, poster)
+
+    return redirect(url_for("show_details", show_id=show_id))
+
+@app.route("/my_watchlist")
+@login_required
+def my_watchlist():
+    items = get_watchlist(current_user.id)
+    return render_template("watchlist.html", items=items)
 
 # ---------------------------------------------------------
 # 1. SEARCH SERIES (TMDb)
@@ -106,6 +145,35 @@ def getTMDBData(seriesKey, seasons):
 
     return seriesName, labelsList, valuesList, episodeTitlesList
 
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+
+        conn = get_db()
+        user = conn.execute(
+            "SELECT * FROM users WHERE username = ? AND password = ?",
+            (username, password)
+        ).fetchone()
+        conn.close()
+
+        if user:
+            user_obj = User(user["id"], user["username"], user["password"])
+            login_user(user_obj)
+
+            next_page = request.args.get("next")
+            return redirect(next_page or url_for("home"))
+
+        return "Invalid username or password"
+
+    return render_template("login.html")
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("login"))
 
 if __name__ == "__main__":
     app.run(debug=True)

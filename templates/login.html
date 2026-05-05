@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SeriesTime • Login</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+
+            /* Subtle cinematic background */
+            background: url('https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=1600&q=80')
+                        no-repeat center center/cover;
+
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Dark overlay for Netflix vibe */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.70);
+            backdrop-filter: blur(2px);
+        }
+
+        /* Title at the top */
+        .title {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 48px;
+            font-weight: bold;
+            color: #e50914; /* Netflix red */
+            text-shadow: 0 0 20px rgba(229, 9, 20, 0.6);
+            letter-spacing: 2px;
+        }
+
+        .login-box {
+            position: relative;
+            z-index: 2;
+            width: 360px;
+            padding: 40px;
+            background: rgba(0,0,0,0.78);
+            border-radius: 8px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.8);
+            color: white;
+        }
+
+        .login-box h2 {
+            margin-bottom: 25px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #e50914;
+            text-align: center;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 18px;
+            border: none;
+            border-radius: 4px;
+            background: #333;
+            color: white;
+            font-size: 15px;
+        }
+
+        .login-box input:focus {
+            outline: 2px solid #e50914;
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 14px;
+            background: #e50914;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .login-box button:hover {
+            background: #f6121d;
+        }
+
+        .signup-text {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #bbb;
+        }
+
+        .signup-text a {
+            color: #e50914;
+            text-decoration: none;
+        }
+
+        .signup-text a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="overlay"></div>
+
+    <!-- Title -->
+    <div class="title">SeriesTime</div>
+
+    <!-- Login Box -->
+    <form method="POST" class="login-box">
+        <h2>Sign In</h2>
+
+        <input name="username" placeholder="Username" required>
+        <input name="password" type="password" placeholder="Password" required>
+
+        <button type="submit">Login</button>
+
+        <div class="signup-text">
+            New to SeriesTime? <a href="/signup">Create an account</a>
+        </div>
+    </form>
+
+</body>
+</html>
